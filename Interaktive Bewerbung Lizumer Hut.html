@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pächterteam Lizumer Hütte</title>
+
+  <!-- Google Fonts: Aptos & Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Aptos:wght@500&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background-image: url('Background1.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;      
+    }
+
+    header {
+      position: relative;
+      width: 100vw;
+      z-index: 999;
+      background-image: url('LizumerHut2.png');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      flex-direction: column;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    header h1,
+    header p {
+      position: relative;
+      z-index: 2;
+      max-width: 80%;
+      margin: 5px auto;
+    }
+
+    header h1 {
+      font-family: 'Aptos', sans-serif;
+      font-size: calc(1.8rem + 0.7vw);
+      color: #fff;
+    }
+
+    header p {
+      font-size: calc(0.8rem + 0.3vw);
+      color: #ddd;
+      text-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+    .main-content {
+      margin-top: 10px;
+      background: transparent;
+    }
+    
+    /*Desktop Profilkarten Ansicht Anfang*/
+    .profiles {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      gap: 10px;
+      padding: 40px 20px;
+      background: transparent;
+      margin-top: -5px;
+      border-radius: 20px 20px 0 0;
+      position: relative;
+      z-index: 2;
+      
+    }
+
+    .profile-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      width: 300px;
+      transition: all 0.8s cubic-bezier(0.4, 2.5, 0.4, 1.5);
+      box-shadow: -3px 4px 15px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transform-origin: top center;
+      position: relative;
+      z-index: 2;
+    }
+
+    
+    .profile-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: all 0.8s cubic-bezier(0.4, 2.5, 0.4, 1.5);
+    }
+
+    .profile-info {
+      padding: 20px;
+      background: #f9f9f9;
+    }
+
+    .profile-name {
+      font-family: 'Aptos', sans-serif;
+      font-size: 1.2rem;
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+
+    .profile-role {
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .profile-summary {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    @media (min-width: 769px) {
+      .mobile-carousel {
+        display: none !important;
+      }
+      .profiles {
+        display: flex;
+        justify-content: space-evenly;
+        max-width: 100vw;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+      .profile-card:hover {
+      transform: scale(1.2) translateY(0);
+      transition: all 0.6s cubic-bezier(0.4, 1.2, 0.4, 1.5);
+      z-index: 100;      
+      box-shadow: -3px 4px 15px rgba(0,0,0,0.5);
+    }
+
+    }
+    /*Desktop Profilkarten Ansicht Ende*/
+    /* Mobile Carousel für Profilkarten  Anfang*/
+    .mobile-carousel {
+      display: none;
+      padding: 20px 40px;
+    }
+    .carousel-container {
+      overflow-x: auto;
+      display: flex;
+      gap: 10px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .carousel-container::-webkit-scrollbar {
+      display: none;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 20px;
+      min-width: 100%;
+      padding-bottom: 20px;
+    }
+    .card-slide {
+      scroll-snap-align: start;
+      flex: 0 0 90vw;
+      max-width: 320px;
+      flex-shrink: 0;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+    @media (max-width: 768px) {
+      .profiles {
+        display: none !important;
+      }
+      .mobile-carousel {
+        display: block;
+      }
+    }
+    /* Mobile Carousel für Profilkarten Ende*/ 
+
+    .interactive-map {
+      position: relative;
+      width: 100%;
+      margin: 0;
+    }
+
+    .interactive-map img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .marker {
+      position: absolute;
+      z-index: 100;
+      cursor: pointer;
+      width: 35px;
+      height: 35px;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+      transition: all 0.8s cubic-bezier(0.4, 1.5, 0.4, 1.5);
+    }
+
+    .tooltip {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.9);
+      color: #555;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      max-width: 220px;
+      word-wrap: break-word;
+      opacity: 0;
+      transition: all 0.8s cubic-bezier(0.4, 2.5, 0.4, 1.5);
+      pointer-events: none;
+      z-index: 101;
+      top: -70px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.95);
+      white-space: normal;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .marker:hover {
+      transform: scale(2.4);
+      transition: all 0.8s cubic-bezier(0.4, 1.5, 0.4, 1.5);    
+    }
+
+    .tooltip:hover + .marker,
+    .marker:hover + .tooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+      transition: all 0.8s cubic-bezier(0.4, 1.5, 0.4, 1.5);
+    }
+
+    .tooltip strong {
+      color: #333;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+
+    .download-section {
+      text-align: center;
+      padding: 40px 20px;
+      background-color: transparent;
+    }
+
+    .download-button {
+      background-color: #2e7d32;
+      display: inline-block;
+      color: white;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.8s cubic-bezier(0.4, 1.5, 0.4, 1.5);
+      font-family: inherit;
+    }
+
+    .download-button:hover {
+      background-color: #1b5e20;
+      transform: scale(1.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .email-section{
+      text-align: center;
+      padding: 40px 20px;
+      background-color: transparent;
+      text-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+    .email-button {
+      background-color: #2e7d32;
+      display: inline-block;
+      color: white;
+      text-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.8s cubic-bezier(0.4, 1.5, 0.4, 1.5);
+      font-family: inherit;
+    }
+
+    .email-button:hover {
+      background-color: #1b5e20;
+      transform: scale(1.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 10px;
+      background-color: #2e7d32;
+      color: white;
+      font-size: 0.9rem;
+    }
+    
+  </style>
+</head>
+<body>
+
+<header id="main-header">
+  <h1>Pächterbewerbung für die Lizumer Hütte</h1>
+  <p><strong>Bewerber:</strong> Toni Vollmann, Camila Carneyro & Jacqueline Vollmann</p>
+</header>
+<div class="main-content">
+  
+  <!--Mobile Profilkarten-->
+  <section class="mobile-carousel">
+    <div class="carousel-container">
+      <div class="carousel-track">
+
+        <!-- Camila -->
+        <div class="card-slide">
+          <a href="Lebenslauf Camila.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <div class="profile-card">
+              <img src="Camila.png" alt="Camila Carneyro">
+              <div class="profile-info">
+                <div class="profile-name">Camila Carneyro</div>
+                <div class="profile-role">Outdoor & Umweltbildung</div>
+                <div class="profile-summary">
+                  Als Zertifizierte Bergführerin, Dozentin und Landschaftsarchitektin bin ich Expertin für Natur, Flora/Fauna und Outdoor-Erlebnisse. Nachhaltigkeit und ein vielseitiges Gasterlebnis sind mir extrem wichtig.
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Jacqueline -->
+        <div class="card-slide">
+          <a href="Lebenslauf Jacqueline.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <div class="profile-card">
+              <img src="Jacqueline.png" alt="Jacqueline Vollmann">
+              <div class="profile-info">
+                <div class="profile-name">Jacqueline Vollmann</div>
+                <div class="profile-role">Restaurantfachfrau & Organisatorin</div>
+                <div class="profile-summary">
+                  Als erfahrene Restaurantfachfrau mit Industriekaufmännischer Ausbildung war ich Stellvertretende Geschäftsführung in Großkonzernen und bringe starke wirtschaftliche und organisatorische Kompetenzen ein.
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Toni -->
+        <div class="card-slide">
+          <a href="Lebenslauf Toni.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <div class="profile-card">
+              <img src="Toni.png" alt="Toni Vollmann">
+              <div class="profile-info">
+                <div class="profile-name">Toni Vollmann</div>
+                <div class="profile-role">Gastronomie & Hüttenführung</div>
+                <div class="profile-summary">
+                  Mit jahrelanger Erfahrung in der Gastronomie, im Einzelhandel als stellvertretender Geschäftsführer und im Handwerk, bringe ich Leidenschaft für nachhaltige Küche, alpine Kultur und einen reibungslosen Betriebsablauf ein.
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Desktop Profilkarten -->
+  <section class="profiles">
+
+     <!-- Camila -->
+    <a href="Lebenslauf Camila.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      <div class="profile-card">
+        <img src="Camila.png" alt="Camila Carneyro">
+        <div class="profile-info">
+          <div class="profile-name">Camila Carneyro</div>
+          <div class="profile-role">Outdoor - Umweltbildung - Kursleitung</div>
+          <div class="profile-summary">
+            Als Zertifizierte Bergführerin, Dozentin und Landschaftsarchitektin bin ich Expertin für Natur, Flora/Fauna und Outdoor-Erlebnisse. Nachhaltigkeit und ein vielseitiges Gasterlebnis sind mir extrem wichtig.
+          </div>
+        </div>
+      </div>
+    </a>
+   
+    <!-- Jacqueline -->
+    <a href="Lebenslauf Jacqueline.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      <div class="profile-card">
+        <img src="Jacqueline.png" alt="Jacqueline Vollmann">
+        <div class="profile-info">
+          <div class="profile-name">Jacqueline Vollmann</div>
+          <div class="profile-role">Restaurantfachfrau & Organisatorin</div>
+          <div class="profile-summary">
+            Als erfahrene Restaurantfachfrau mit Industriekaufmännischer Ausbildung war ich Stellvertretende Geschäftsführung in Großkonzernen und bringe starke wirtschaftliche und organisatorische Kompetenzen ein.
+          </div>
+        </div>
+      </div>
+    </a>  
+     <!-- Toni -->
+    <a href="Lebenslauf Toni.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      <div class="profile-card">
+        <img src="Toni.png" alt="Toni Vollmann">
+        <div class="profile-info">
+          <div class="profile-name">Toni Vollmann</div>
+          <div class="profile-role">Gastronomie & Hüttenführung</div>
+          <div class="profile-summary">
+            Mit jahrelanger Erfahrung in der Gastronomie, im Einzelhandel als stellvertretender Geschäftsführer und im Handwerk, bringe ich Leidenschaft für nachhaltige Küche, alpine Kultur und einen reibungslosen Betriebsablauf ein.
+          </div>
+        </div>
+      </div>
+    </a>
+    
+  </section>
+    <!-- Mobile Carousel für Profilkarten -->
+  
+
+<!-- Interaktives Bild mit Markern -->
+<div class="interactive-map">
+  <img src="LizumerHut1.png" alt="LizumerHut1" />
+
+  <!-- Marker 1: Einleitung & Motivation -->
+  <div class="marker" style="top: 22.5%; left: 50.5%;" onmouseover="document.getElementById('tooltip1').style.opacity = '1';" onmouseout="document.getElementById('tooltip1').style.opacity = '0';"></div>
+  <div id="tooltip1" class="tooltip" style="top: 22.6%; left: 51.8%;">
+    <strong><h3>Einleitung & Motivation</h3></strong>
+    Mit großer Leidenschaft für die Berge, traditioneller Hüttenkultur und nachhaltiger Gastronomie bewerben wir uns als Dreier-Team um diese besondere und wunderschöne Hütte.
+  </div>
+
+  <!-- Marker 2: Gastronomisches Konzept -->
+  <div class="marker" style="top: 58.5%; left: 71.2%;" onmouseover="document.getElementById('tooltip2').style.opacity = '1';" onmouseout="document.getElementById('tooltip2').style.opacity = '0';"></div>
+  <div id="tooltip2" class="tooltip" style="top: 58.5%; left: 71.2%;">
+    <strong><h3>Gastronomisches Konzept</h3></strong>
+    Moderne, gesunde Küche mit regionalen, saisonalen Produkten sowie vegetarischen und auch veganen Angeboten – transparent, nachhaltig und auf alle Gäste abgestimmt.
+  </div>
+
+  <!-- Marker 3: Service & Gästeerlebnis -->
+  <div class="marker" style="top: 53.0%; left: 49.7%;" onmouseover="document.getElementById('tooltip3').style.opacity = '1';" onmouseout="document.getElementById('tooltip3').style.opacity = '0';"></div>
+  <div id="tooltip3" class="tooltip" style="top: 53.0%; left: 51.7%;">
+    <strong><h3>Service & Gästeerlebnis</h3></strong>
+    Herzliche Gastfreundschaft, persönliche Beratung und Tipps für Wanderungen in der Region – damit sich jeder Gast willkommen fühlt.
+  </div>
+
+  <!-- Marker 4: Nachhaltigkeitskonzept -->
+  <div class="marker" style="top: 73.8%; left: 86.8%;" onmouseover="document.getElementById('tooltip4').style.opacity = '1';" onmouseout="document.getElementById('tooltip4').style.opacity = '0';"></div>
+  <div id="tooltip4" class="tooltip" style="top: 73.8%; left: 76.5%;">
+    <strong><h3>Nachhaltigkeit</h3></strong>
+    Reduzierung von Lebensmittel-<br>verschwendung, regionale Partnerschaften und Umweltbildung – damit Natur und Genuss Hand in Hand gehen.
+  </div>
+
+  <!-- Marker 5: Team & Organisation -->
+  <div class="marker" style="top: 52.3%; left: 22.7%;" onmouseover="document.getElementById('tooltip5').style.opacity = '1';" onmouseout="document.getElementById('tooltip5').style.opacity = '0';"></div>
+  <div id="tooltip5" class="tooltip" style="top: 52.3%; left: 29.7%;">
+    <strong><h3>Team & Organisation</h3></strong>
+    Mit gemeinsam über 19 Jahren Erfahrung in der Gastronomie bringe wir Führungskompetenz, Transparenz und eine klare Hands-on-Mentalität ein.
+  </div>
+
+  <!-- Marker 6: Zusammenarbeit Alpenverein -->
+  <div class="marker" style="top: 29.5%; left: 70.1%;" onmouseover="document.getElementById('tooltip6').style.opacity = '1';" onmouseout="document.getElementById('tooltip6').style.opacity = '0';"></div>
+  <div id="tooltip6" class="tooltip" style="top: 29.5%; left: 70.1%;">
+    <strong><h3>Zusammenarbeit mit dem Alpenverein</h3></strong>
+    Veranstaltungen organisieren, Umweltgütesiegel aktiv tragen und die Tradition des Hauses bewahren – gemeinsam möchten wir mit euch etwas Großes gestalten.
+  </div>
+</div>
+
+<!-- Download-Bereich -->
+<section class="download-section">
+  <h2>Mehr erfahren</h2>
+  <p>Lade dir unser vollständiges Betriebskonzept herunter und erfahre mehr über unsere Vision für die Lizumer Hütte.</p>
+  <br>
+  <a href="Betriebskonzept Lizumer Hütte.pdf" class="download-button" target="_blank" rel="noopener noreferrer">PDF herunterladen</a>
+</section>
+<section class="email-section">
+     <a href="mailto:toni.vollmann@gmx.at?subject=Pächterbewerbung%20Lizumer H%C3%BCtte&body=Guten%20Tag%20Toni%2C%0D%0A%0D%0Awir%20haben%20deine%20Bewerbung%20f%C3%BCr%20das%20Lizumer H%C3%BCtte%20erhalten%20und%20sind%20wirklich%20begeistert%20%E2%80%93%20eine%20Wahnsinns-Bewerbung!%0D%0A%0D%0AWir%20w%C3%BCrden%20euch%20sehr%20gerne%20pers%C3%B6nlich%20kennenlernen.%20Wann%20w%C3%A4re%20bei%20euch%20ein%20passender%20Termin%20daf%C3%BCr?%0D%0A%0D%0AViele%20Gr%C3%BC%C3%9Fe%0D%0Avom%20Alpenverein%20Kufstein" 
+   class="email-button">
+    jetzt E-Mail schreiben
+  </a>
+</section>
+<!-- Footer mit E-Mail Button -->
+<footer class="site-footer">
+  © 2025<br>Toni Vollmann, Camila Carneyro<br>Jacqueline Vollmann<br>Bewerbung als Pächter der Lizumer Hütte
+  <br>
+</footer>
+</body>
+</html>

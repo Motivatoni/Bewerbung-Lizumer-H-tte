@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anton-Karg-Haus - Bewerbung</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Aptos:wght@500&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background-image: url('Background1.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    /* Fixierter Header */
+    header {
+      position: relative;
+      width: 100%;
+      height: 310px;
+      background-image: url('AntonKargHaus2.png');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+    header h1,
+    header p {
+      position: relative;
+      z-index: 2;
+      max-width: 90%;
+      margin: 5px auto;
+    }
+    header h1 {
+      font-family: 'Aptos', sans-serif;
+      font-size: calc(2rem + 0.5vw); /* Responsiv skaliert */
+      color: #fff;
+    }
+    header p {
+      font-size: calc(1rem + 0.1vw);
+      color: #ddd;
+    }
+
+    .main-content {
+      margin-top: 20px;
+      padding: 0 20px;
+      background: transparent;
+    }
+
+    /* Mobile Carousel für Profilkarten */
+    .mobile-carousel {
+      display: none;
+      padding: 20px 0;
+    }
+    .carousel-container {
+      overflow-x: auto;
+      display: flex;
+      gap: 20px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .carousel-container::-webkit-scrollbar {
+      display: none;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 20px;
+      min-width: 100%;
+      padding-bottom: 20px;
+    }
+    .card-slide {
+      scroll-snap-align: start;
+      flex: 0 0 90vw;
+      max-width: 320px;
+      flex-shrink: 0;
+    }
+
+    /* Standard Profilkarten-Ansicht */
+    .profiles {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      padding: 40px 20px;
+      background: transparent;
+      position: relative;
+      z-index: 2;
+    }
+    .profile-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      width: 300px;
+      transition: transform 0.5s ease-in-out;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transform-origin: top center;
+      position: relative;
+      z-index: 2;
+    }
+    .profile-card:hover {
+      transform: scale(1.2) translateY(0);
+    }
+    .profile-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .profile-info {
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    .profile-name {
+      font-family: 'Aptos', sans-serif;
+      font-size: 1.2rem;
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+    .profile-role {
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .profile-summary {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .profiles {
+        display: none !important;
+      }
+      .mobile-carousel {
+        display: block;
+      }
+      .carousel-track {
+        display: flex;
+        gap: 20px;
+        min-width: 100%;
+      }
+      .card-slide {
+        scroll-snap-align: start;
+        flex: 0 0 auto;
+        width: 90vw;
+        max-width: 90vw;
+      }
+      .profile-card {
+        width: 90vw;
+        transform: none !important;
+      }
+      .tooltip {
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 90vw;
+        font-size: calc(1rem + 0.2vw);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 101;
+      }
+
+      .marker:hover + .tooltip,
+      .marker:focus + .tooltip {
+        opacity: 1;
+  }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-carousel {
+        display: none;
+      }
+      .profiles {
+        display: flex;
+        justify-content: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+    }
+
+    /* Interaktives Hüttenbild – volle Breite */
+    .interactive-map {
+      width: 100vw;
+      min-height: 750px;
+      margin-left: calc(-50vw + 50%);
+      position: relative;
+      overflow: hidden;
+    }
+    .interactive-map img {
+      width: 100%;
+      min-height: 750px;
+      object-fit: cover;
+      height: auto;
+      display: block;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    /* Marker */
+    .marker {
+      position: absolute;
+      z-index: 100;
+      cursor: pointer;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+      transition: transform 0.5s ease;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.95);
+      color: #555;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: calc(1rem + 0.2vw); /* Skalierende Schriftgröße */
+      word-wrap: break-word;
+      opacity: 0;
+      transition: all 0.5s ease;
+      pointer-events: none;
+      z-index: 101;
+      top: -70px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: normal;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 300px;
+      will-change: transform;
+    }
+
+    .tooltip strong {
+      display: block;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .mobile-tooltip {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 85vw;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      font-size: 1rem;
+      z-index: 200;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .marker:hover {
+      transform: scale(1.4);
+    }
+
+    .marker:hover + .tooltip {
+      opacity: 1;
+    }
+
+    /* Mobiloptimierte Tooltips */
+    @media (max-width: 768px) {
+      .tooltip {
+        font-size: calc(0.9rem + 0.3vw); /* Noch feiner angepasst */
+        padding: 10px;
+        max-width: 90vw;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%) scale(1);
+        border-radius: 10px;
+      }
+
+      .marker:hover + .tooltip {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+    }
+
+    /* Download-Bereich */
+    .download-section {
+      text-align: center;
+      padding: 40px 20px;
+      background: transparent;
+    }
+    .download-section h2 {
+      font-family: 'Aptos', sans-serif;
+      font-size: calc(1.5rem + 0.2vw);
+      color: #2e7d32;
+      margin-bottom: 15px;
+    }
+    .download-button {
+      background-color: #2e7d32;
+      color: white;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-family: inherit;
+    }
+    .download-button:hover {
+      background-color: #1b5e20;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px 10px;
+      background-color: #2e7d32;
+      color: white;
+      font-size: 0.9rem;
+      margin-top: 60px;
+    }
+  </style>
+
+  <!-- JavaScript zur dynamischen Tooltip-Positionierung -->
+  <script>
+    function updateTooltips() {
+      document.querySelectorAll('.marker').forEach(marker => {
+        const tooltip = marker.nextElementSibling;
+        if (!tooltip || !tooltip.classList.contains('tooltip')) return;
+
+        const rect = marker.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+
+        // Dynamische Positionierung außerhalb des Bildes
+        tooltip.style.top = `${rect.top - 80}px`;
+        tooltip.style.left = `${rect.left + rect.width / 2}px`;
+        tooltip.style.transform = `translateX(-50%)`;
+
+        // Verkleinere Tooltip bei kleinem Bildschirm
+        if (viewportWidth < 600) {
+          tooltip.style.maxWidth = '90vw';
+          tooltip.style.fontSize = 'calc(0.9rem + 0.3vw)';
+        } else {
+          tooltip.style.maxWidth = '300px';
+          tooltip.style.fontSize = '1.1rem';
+        }
+      });
+    }
+    function isMobile() {
+      return window.innerWidth <= 768;
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      const tooltip = document.getElementById('mobileTooltip');
+      if (!isMobile() || !tooltip) return;
+  
+      document.querySelectorAll('.marker').forEach(marker => {
+        marker.addEventListener('mouseenter', () => {
+          const content = marker.getAttribute('data-tooltip');
+          if (content) {
+            tooltip.innerHTML = content;
+            tooltip.style.opacity = '1';
+          }
+        });
+  
+        marker.addEventListener('mouseleave', () => {
+          tooltip.style.opacity = '0';
+        });
+      });
+    });
+
+    window.addEventListener('load', updateTooltips);
+    window.addEventListener('resize', updateTooltips);
+  </script>
+</head>
+<body>
+
+<!-- Fixierter Header -->
+<header id="main-header">
+  <h1>Pächterbewerbung für das Anton-Karg-Haus</h1>
+  <p><strong>Bewerber:</strong> Toni Vollmann, Camila Carneyro & Jacqueline Vollmann</p>
+</header>
+
+<div class="main-content">
+
+  <!-- Mobile Carousel für Profilkarten -->
+  <section class="mobile-carousel">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <!-- Camila -->
+        <div class="card-slide">
+          <a href="Lebenslauf Camila.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <div class="profile-card">
+              <img src="Camila.png" alt="Camila Carneyro">
+              <div class="profile-info">
+                <div class="profile-name">Camila Carneyro</div>
+                <div class="profile-role">Outdoor & Umweltbildung</div>
+                <div class="profile-summary">
+                  Zertifizierte Bergführerin, Dozentin und Landschaftsarchitektin. Expertin für Natur, Flora/Fauna, Outdoor-Erlebnisse und Nachhaltigkeit.
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <!-- Jacqueline -->
+        <div class="card-slide">
+          <a href="Lebenslauf Jacqueline.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <div class="profile-card">
+              <img src="Jacqueline.png" alt="Jacqueline Vollmann">
+              <div class="profile-info">
+                <div class="profile-name">Jacqueline Vollmann</div>
+                <div class="profile-role">Restaurantfachfrau & Organisatorin</div>
+                <div class="profile-summary">
+                  Erfahrene Restaurantfachfrau mit kaufmännischer Ausbildung. Stellvertretende Geschäftsführung im Fahrradhandel. Starke handwerkliche und organisatorische Kompetenz.
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <!-- Toni -->
+        <div class="card-slide">
+          <a href="Lebenslauf Toni.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <div class="profile-card">
+              <img src="Toni.png" alt="Toni Vollmann">
+              <div class="profile-info">
+                <div class="profile-name">Toni Vollmann</div>
+                <div class="profile-role">Gastronomie & Hüttenführung</div>
+                <div class="profile-summary">
+                  Mit jahrelanger Erfahrung in der Gastronomie bringe ich Leidenschaft für nachhaltige Küche, alpine Kultur und einen reibungslosen Betriebsablauf ein.
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Profilkarten für Desktop -->
+  <section class="profiles">
+    <!-- Jacqueline -->
+    <a href="Lebenslauf Jacqueline.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      <div class="profile-card">
+        <img src="Jacqueline.png" alt="Jacqueline Vollmann">
+        <div class="profile-info">
+          <div class="profile-name">Jacqueline Vollmann</div>
+          <div class="profile-role">Restaurantfachfrau & Organisatorin</div>
+          <div class="profile-summary">
+            Erfahrene Restaurantfachfrau mit kaufmännischer Ausbildung. Stellvertretende Geschäftsführung im Fahrradhandel. Starke handwerkliche und organisatorische Kompetenz.
+          </div>
+        </div>
+      </div>
+    </a>
+    <!-- Toni -->
+    <a href="Lebenslauf Toni.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      <div class="profile-card">
+        <img src="Toni.png" alt="Toni Vollmann">
+        <div class="profile-info">
+          <div class="profile-name">Toni Vollmann</div>
+          <div class="profile-role">Gastronomie & Hüttenführung</div>
+          <div class="profile-summary">
+            Mit jahrelanger Erfahrung in der Gastronomie, im Einzelhandel als stellvertretender Geschäftsführer und im Handwerk, bringe ich Leidenschaft für nachhaltige Küche, alpine Kultur und einen reibungslosen Betriebsablauf ein.
+          </div>
+        </div>
+      </div>
+    </a>
+    <!-- Camila -->
+    <a href="Lebenslauf Camila.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      <div class="profile-card">
+        <img src="Camila.png" alt="Camila Carneyro">
+        <div class="profile-info">
+          <div class="profile-name">Camila Carneyro</div>
+          <div class="profile-role">Outdoor - Umweltbildung Kursleitung</div>
+          <div class="profile-summary">
+            Als Zertifizierte Bergführerin, Dozentin und Landschaftsarchitektin bin ich Expertin für Natur, Flora/Fauna und Outdoor-Erlebnisse. Nachhaltigkeit und ein vielseitiges Gasterlebnis sind mir extrem wichtig.
+          </div>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- Interaktives Bild -->
+  <div class="interactive-map">
+    <img src="AntonKargHaus1.png" alt="Anton-Karg-Haus" />
+
+    <!-- Marker 1 -->
+    <div class="marker" style="top: 23.5%; left: 51.0%;" onmouseover="document.getElementById('tooltip1').style.opacity = '1';" onmouseout="document.getElementById('tooltip1').style.opacity = '0';"></div>
+    <div id="tooltip1" class="tooltip" style="opacity: 0;">
+      <strong><h3>Einleitung & Motivation</h3></strong>
+      Mit großer Leidenschaft für die Berge, traditioneller Hüttenkultur und nachhaltiger Gastronomie bewerben wir uns als Dreier-Team um diese besondere Hütte.
+    </div>
+
+    <!-- Marker 2 -->
+    <div class="marker" style="top: 78.5%; left: 56.2%;" onmouseover="document.getElementById('tooltip2').style.opacity = '1';" onmouseout="document.getElementById('tooltip2').style.opacity = '0';"></div>
+    <div id="tooltip2" class="tooltip" style="opacity: 0;">
+      <strong><h3>Gastronomisches Konzept</h3></strong>
+      Moderne, gesunde Küche mit regionalen, saisonalen Produkten sowie vegetarischen und veganen Angeboten – transparent, nachhaltig und auf alle Gäste abgestimmt.
+    </div>
+
+    <!-- Marker 3 -->
+    <div class="marker" style="top: 53.0%; left: 51.7%;" onmouseover="document.getElementById('tooltip3').style.opacity = '1';" onmouseout="document.getElementById('tooltip3').style.opacity = '0';"></div>
+    <div id="tooltip3" class="tooltip" style="opacity: 0;">
+      <strong><h3>Service & Gästeerlebnis</h3></strong>
+      Herzliche Gastfreundschaft, persönliche Beratung und Tipps für Wanderungen in der Region – damit sich jeder Gast willkommen fühlt.
+    </div>
+
+    <!-- Marker 4 -->
+    <div class="marker" style="top: 73.8%; left: 86.8%;" onmouseover="document.getElementById('tooltip4').style.opacity = '1';" onmouseout="document.getElementById('tooltip4').style.opacity = '0';"></div>
+    <div id="tooltip4" class="tooltip" style="opacity: 0;">
+      <strong><h3>Nachhaltigkeit</h3></strong>
+      Reduzierung von Lebensmittelverschwendung, regionale Partnerschaften und Umweltbildung – damit Natur und Genuss Hand in Hand gehen.
+    </div>
+
+    <!-- Marker 5 -->
+    <div class="marker" style="top: 65.3%; left: 12.7%;" onmouseover="document.getElementById('tooltip5').style.opacity = '1';" onmouseout="document.getElementById('tooltip5').style.opacity = '0';"></div>
+    <div id="tooltip5" class="tooltip" style="opacity: 0;">
+      <strong><h3>Team & Organisation</h3></strong>
+      Mit gemeinsam über 19 Jahren Erfahrung in der Gastronomie bringen wir Führungskompetenz, Transparenz und eine klare Hands-on-Mentalität ein.
+    </div>
+
+    <!-- Marker 6 -->
+    <div class="marker" style="top: 29.5%; left: 70.1%;" onmouseover="document.getElementById('tooltip6').style.opacity = '1';" onmouseout="document.getElementById('tooltip6').style.opacity = '0';"></div>
+    <div id="tooltip6" class="tooltip" style="opacity: 0;">
+      <strong><h3>Zusammenarbeit mit dem Alpenverein</h3></strong>
+      Veranstaltungen organisieren, Umweltgütesiegel aktiv tragen und die Tradition des Hauses bewahren – gemeinsam etwas Großes gestalten.
+    </div>
+  </div>
+
+  <!-- Download-Bereich -->
+  <section class="download-section">
+    <h2>Mehr erfahren</h2>
+    <p>Lade dir unser vollständiges Betriebskonzept herunter und erfahre mehr über unsere Vision für das Anton-Karg-Haus.</p>
+    <br>
+    <a href="Betriebskonzept Anton-Karg-Haus.pdf" class="download-button" target="_blank" rel="noopener noreferrer">PDF herunterladen</a>
+  </section>
+</div>
+
+<!-- Footer -->
+<footer>
+  © 2025 Toni Vollmann, Camila Carneyro, Jacqueline Vollmann – Bewerbung als Pächter des Anton-Karg-Hauses
+</footer>
+
+</body>
+</html>
+
