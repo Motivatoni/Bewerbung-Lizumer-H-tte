@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pächterbewerbung Lizumer Hütte – Toni, Camila & Jacqueline</title>
+    <meta name="description" content="Interaktive Bewerbung als Pächterteam für die Lizumer Hütte. Ein Team mit Leidenschaft für die Berge, nachhaltige Gastronomie und alpine Gastfreundschaft.">
+    
+    <style>
+        /* ============================================
+           CSS RESET & BASE
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #2c5f2d;
+            --color-primary-dark: #1a3d1b;
+            --color-secondary: #97bc62;
+            --color-accent: #d4a373;
+            --color-accent-light: #e8c9a8;
+            --color-dark: #1a1a1a;
+            --color-light: #f8f9fa;
+            --color-white: #ffffff;
+            --color-text: #333333;
+            --color-text-light: #666666;
+            --color-border: #e0e0e0;
+            
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-serif: Georgia, 'Times New Roman', serif;
+            
+            --transition-smooth: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.3s ease;
+            
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+            
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-light);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============================================
+           PROGRESS BAR (BBC-style)
+           ============================================ */
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .progress-indicator--active {
+            opacity: 1;
+        }
+
+        .progress-indicator__bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            transition: width 0.1s linear;
+        }
+
+        /* ============================================
+           NAVIGATION
+           ============================================ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            z-index: 9999;
+            transition: var(--transition-smooth);
+            background: transparent;
+        }
+
+        .nav--scrolled {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            padding: 0.75rem 2rem;
+        }
+
+        .nav__container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav__logo {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav__links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav__link {
+            color: var(--color-white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: var(--transition-fast);
+        }
+
+        .nav--scrolled .nav__link {
+            color: var(--color-dark);
+        }
+
+        .nav__link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-secondary);
+            transition: width 0.3s ease;
+        }
+
+        .nav__link:hover::after {
+            width: 100%;
+        }
+
+        .nav__burger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav__burger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--color-white);
+            margin: 5px 0;
+            transition: var(--transition-fast);
+        }
+
+        .nav--scrolled .nav__burger span {
+            background: var(--color-dark);
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: var(--color-dark);
+        }
+
+        .hero__background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('Background1.png') center/cover no-repeat;
+            will-change: transform;
+        }
+
+        .hero__overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                rgba(0,0,0,0.3) 0%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.6) 100%
+            );
+        }
+
+        .hero__content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--color-white);
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        .hero__eyebrow {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero__title {
+            font-family: var(--font-serif);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero__subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            font-weight: 300;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero__team {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero__scroll {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--color-white);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1.5s forwards;
+        }
+
+        .hero__scroll::after {
+            content: '';
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: var(--color-white);
+            margin: 1rem auto 0;
+            animation: scrollLine 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollLine {
+            0%, 100% { transform: scaleY(0.5); opacity: 0.3; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* ============================================
+           SECTION BASE
+           ============================================ */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section--full {
+            max-width: none;
+            padding: 6rem 0;
+        }
+
+        .section--dark {
+            background: var(--color-dark);
+            color: var(--color-white);
+        }
+
+        .section--light {
+            background: var(--color-light);
+        }
+
+        .section__header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section__eyebrow {
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .section__title {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .section__lead {
+            font-size: 1.2rem;
+            color: var(--color-text-light);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .section--dark .section__lead {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* ============================================
+           FADE SCROLL (BBC-style)
+           ============================================ */
+        .fade-scroll {
+            position: relative;
+        }
+
+        .fade-scroll__background {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .fade-scroll__bg-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .fade-scroll__bg-item--active {
+            opacity: 1;
+        }
+
+        .fade-scroll__bg-item:first-child {
+            opacity: 1;
+        }
+
+        .fade-scroll__foreground {
+            position: relative;
+            margin-top: -100vh;
+            z-index: 2;
+        }
+
+        .fade-scroll__slide {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .fade-scroll__card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            max-width: 700px;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateY(40px);
+            transition: var(--transition-smooth);
+        }
+
+        .fade-scroll__card--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-scroll__card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--color-primary-dark);
+        }
+
+        .fade-scroll__card p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--color-text);
+            margin-bottom: 1rem;
+        }
+
+        /* ============================================
+           STICKY SCROLL (BBC-style Team Section)
+           ============================================ */
+        .sticky-scroll {
+            background: var(--color-light);
+        }
+
+        .sticky-scroll__container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .sticky-scroll__content {
+            display: flex;
+            gap: 4rem;
+            align-items: flex-start;
+        }
+
+        .sticky-scroll__media {
+            flex: 1;
+            position: sticky;
+            top: 100px;
+            height: calc(100vh - 120px);
+            max-height: 700px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .sticky-scroll__media-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .sticky-scroll__media-item--visible {
+            opacity: 1;
+        }
+
+        .sticky-scroll__items {
+            flex: 1;
+            padding-top: 100px;
+        }
+
+        .sticky-scroll__item {
+            margin-bottom: 6rem;
+            opacity: 0;
+            transform: translateX(40px);
+            transition: var(--transition-smooth);
+        }
+
+        .sticky-scroll__item--visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .sticky-scroll__item h3 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            color: var(--color-primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .sticky-scroll__role {
+            font-size: 1rem;
+            color: var(--color-accent);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .sticky-scroll__item p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--color-text);
+            margin-bottom: 1rem;
+        }
+
+        .sticky-scroll__skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        .skill-tag {
+            background: var(--color-secondary);
+            color: var(--color-white);
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: var(--transition-smooth);
+        }
+
+        .skill-tag--visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ============================================
+           CONCEPT GRID
+           ============================================ */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .concept-card {
+            background: var(--color-white);
+            padding: 2.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(40px);
+            border-top: 3px solid var(--color-secondary);
+        }
+
+        .concept-card--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .concept-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .concept-card__icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .concept-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            color: var(--color-primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        .concept-card p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+        }
+
+        .concept-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .concept-card li {
+            padding: 0.5rem 0 0.5rem 1.75rem;
+            position: relative;
+            font-size: 0.95rem;
+            color: var(--color-text);
+        }
+
+        .concept-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* ============================================
+           STATS SECTION
+           ============================================ */
+        .stats-section {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+            color: var(--color-white);
+            padding: 6rem 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: var(--transition-smooth);
+        }
+
+        .stat-item--visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .stat-number {
+            font-family: var(--font-serif);
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            letter-spacing: 1px;
+        }
+
+        /* ============================================
+           CTA SECTION
+           ============================================ */
+        .cta-section {
+            text-align: center;
+            padding: 8rem 2rem;
+            background: var(--color-light);
+        }
+
+        .cta-section h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--color-primary-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: var(--color-text-light);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.25rem 2.5rem;
+            background: var(--color-primary);
+            color: var(--color-white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(30px);
+            border: 2px solid var(--color-primary);
+        }
+
+        .cta-button--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cta-button:hover {
+            background: var(--color-primary-dark);
+            border-color: var(--color-primary-dark);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .cta-button--outline {
+            background: transparent;
+            color: var(--color-primary);
+        }
+
+        .cta-button--outline:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            background: var(--color-dark);
+            color: var(--color-white);
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer__logo {
+            height: 30px;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 900px) {
+            .nav__links {
+                display: none;
+            }
+
+            .nav__burger {
+                display: block;
+            }
+
+            .sticky-scroll__content {
+                flex-direction: column;
+            }
+
+            .sticky-scroll__media {
+                position: relative;
+                top: 0;
+                height: 400px;
+                max-height: none;
+                width: 100%;
+            }
+
+            .sticky-scroll__items {
+                padding-top: 2rem;
+            }
+
+            .fade-scroll__card {
+                padding: 2rem;
+            }
+
+            .section {
+                padding: 4rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero__content {
+                padding: 0 1.5rem;
+            }
+
+            .concept-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .stat-number {
+                font-size: 3rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        /* ============================================
+           REDUCED MOTION
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        /* ============================================
+           UTILITY
+           ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition-smooth);
+        }
+
+        .reveal--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-center { text-align: center; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Indicator (BBC-style) -->
+    <div class="progress-indicator" id="progressIndicator">
+        <div class="progress-indicator__bar" id="progressBar"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav__container">
+            <img src="logo.png" alt="Logo" class="nav__logo">
+            <ul class="nav__links">
+                <li><a href="#team" class="nav__link">Team</a></li>
+                <li><a href="#konzept" class="nav__link">Konzept</a></li>
+                <li><a href="#nachhaltigkeit" class="nav__link">Nachhaltigkeit</a></li>
+                <li><a href="#kontakt" class="nav__link">Kontakt</a></li>
+            </ul>
+            <button class="nav__burger" aria-label="Menü öffnen">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero__background" id="heroBg"></div>
+        <div class="hero__overlay"></div>
+        <div class="hero__content">
+            <p class="hero__eyebrow">Pächterbewerbung 2026</p>
+            <h1 class="hero__title">Lizumer Hütte</h1>
+            <p class="hero__subtitle">Ein Team mit Leidenschaft für die Berge, nachhaltige Gastronomie und alpine Gastfreundschaft</p>
+            <p class="hero__team">Toni Vollmann · Camila Carneyro · Jacqueline Vollmann</p>
+        </div>
+        <div class="hero__scroll">Scrollen</div>
+    </section>
+
+    <!-- Einleitung - Fade Scroll Section -->
+    <section class="fade-scroll" id="einleitung">
+        <div class="fade-scroll__background">
+            <div class="fade-scroll__bg-item fade-scroll__bg-item--active" style="background-image: url('LizumerHut1.png');"></div>
+            <div class="fade-scroll__bg-item" style="background-image: url('LizumerHut2.png');"></div>
+            <div class="fade-scroll__bg-item" style="background-image: url('Background1.png');"></div>
+        </div>
+        <div class="fade-scroll__foreground">
+            <div class="fade-scroll__slide">
+                <div class="fade-scroll__card" data-animate>
+                    <h3>Einleitung & Motivation</h3>
+                    <p>Mit großer Leidenschaft für die Berge, traditionelle Hüttenkultur und nachhaltige Gastronomie bewerben wir uns als Dreier-Team um die Pächterstelle der Lizumer Hütte.</p>
+                    <p>Uns begeistert nicht nur die beeindruckende Lage in den Tuxer Alpen, sondern auch die Vielfalt an Aktivitäten – von Wanderungen über Skitouren bis hin zu Kursen und Ausbildungen.</p>
+                </div>
+            </div>
+            <div class="fade-scroll__slide">
+                <div class="fade-scroll__card" data-animate>
+                    <h3>Unser Versprechen</h3>
+                    <p>Unser gemeinsames Ziel ist es, die Lizumer Hütte als einen Ort der Begegnung, Erholung und alpiner Gastfreundschaft zu führen – mit Respekt vor der Natur, Wertschätzung gegenüber Gästen und Mitarbeitenden sowie einem wirtschaftlich tragfähigen Konzept.</p>
+                </div>
+            </div>
+            <div class="fade-scroll__slide">
+                <div class="fade-scroll__card" data-animate>
+                    <h3>Warum wir?</h3>
+                    <p>Als Dreier-Team vereinen wir unterschiedliche Stärken – Toni (Gastronomie & Handwerk), Camila (Outdoor & Umweltbildung) und Jacqueline (Organisation & Gastronomie) – und bringen das nötige Wissen, Engagement und Herzblut mit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section - Sticky Scroll -->
+    <section class="sticky-scroll section--full" id="team">
+        <div class="sticky-scroll__container">
+            <div class="section__header">
+                <p class="section__eyebrow">Unser Team</p>
+                <h2 class="section__title">Drei Menschen. Eine Vision.</h2>
+                <p class="section__lead">Jeder bringt einzigartige Kompetenzen mit – zusammen sind wir mehr als die Summe unserer Teile.</p>
+            </div>
+
+            <div class="sticky-scroll__content">
+                <div class="sticky-scroll__media">
+                    <div class="sticky-scroll__media-item sticky-scroll__media-item--visible" style="background-image: url('Camila.png');"></div>
+                    <div class="sticky-scroll__media-item" style="background-image: url('Jacqueline.png');"></div>
+                    <div class="sticky-scroll__media-item" style="background-image: url('Toni.png');"></div>
+                </div>
+
+                <div class="sticky-scroll__items">
+                    <div class="sticky-scroll__item" data-animate>
+                        <h3>Camila Carneyro</h3>
+                        <p class="sticky-scroll__role">Outdoor · Umweltbildung · Kursleitung</p>
+                        <p>Als zertifizierte Bergführerin, Dozentin und Landschaftsarchitektin bin ich Expertin für Natur, Flora/Fauna und Outdoor-Erlebnisse. Nachhaltigkeit und ein vielseitiges Gasterlebnis sind mir extrem wichtig.</p>
+                        <p>Zuletzt habe ich in Chile an der Universität zukünftige Tourismusführer ausgebildet und mein Wissen in Theorie und Praxis vermittelt. Meine Leidenschaft für den Tourismus und meine Fähigkeit, komplexe Abläufe zu organisieren, möchte ich nun in einem Umfeld einbringen, in dem ich meine Kenntnisse weiterentwickeln kann.</p>
+                        <div class="sticky-scroll__skills">
+                            <span class="skill-tag">Bergführerin</span>
+                            <span class="skill-tag">Landschaftsarchitektin</span>
+                            <span class="skill-tag">Dozentin</span>
+                            <span class="skill-tag">Flora & Fauna</span>
+                            <span class="skill-tag">Wilderness First Responder</span>
+                            <span class="skill-tag">Ökotourismus</span>
+                        </div>
+                    </div>
+
+                    <div class="sticky-scroll__item" data-animate>
+                        <h3>Jacqueline Vollmann</h3>
+                        <p class="sticky-scroll__role">Restaurantfachfrau · Organisatorin</p>
+                        <p>Als erfahrene Restaurantfachfrau mit Industriekaufmännischer Ausbildung war ich Stellvertretende Geschäftsführung in Großkonzernen und bringe starke wirtschaftliche und organisatorische Kompetenzen ein.</p>
+                        <p>Meine Expertise umfasst kaufmännische Führung, Personalmanagement und die Organisation komplexer Betriebsabläufe – perfekt für eine erfolgreiche Hüttenführung. Durch meine handwerkliche Erfahrung aus der Werkstatt ergänze ich das Team ideal.</p>
+                        <div class="sticky-scroll__skills">
+                            <span class="skill-tag">Restaurantfachfrau</span>
+                            <span class="skill-tag">Industriekauffrau</span>
+                            <span class="skill-tag">Controlling</span>
+                            <span class="skill-tag">Führung</span>
+                            <span class="skill-tag">Organisation</span>
+                            <span class="skill-tag">Handwerk</span>
+                        </div>
+                    </div>
+
+                    <div class="sticky-scroll__item" data-animate>
+                        <h3>Toni Vollmann</h3>
+                        <p class="sticky-scroll__role">Gastronomie · Hüttenführung</p>
+                        <p>Mit jahrelanger Erfahrung in der Gastronomie, im Einzelhandel als stellvertretender Geschäftsführer und im Handwerk, bringe ich Leidenschaft für nachhaltige Küche, alpine Kultur und einen reibungslosen Betriebsablauf ein.</p>
+                        <p>Als ausgebildeter Zweiradmechatroniker verfüge ich zusätzlich über technisches Know-how für Reparaturen und Instandhaltung – ein unschätzbarer Vorteil im alpinen Umfeld. Meine Küche verbindet traditionelle Geschmäcker mit innovativen, nachhaltigen Konzepten.</p>
+                        <div class="sticky-scroll__skills">
+                            <span class="skill-tag">Gastronomie</span>
+                            <span class="skill-tag">Küche & Service</span>
+                            <span class="skill-tag">Zweiradmechatroniker</span>
+                            <span class="skill-tag">Teamführung</span>
+                            <span class="skill-tag">Nachhaltigkeit</span>
+                            <span class="skill-tag">HACCP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Betriebskonzept Section -->
+    <section class="section" id="konzept">
+        <div class="section__header">
+            <p class="section__eyebrow">Betriebskonzept</p>
+            <h2 class="section__title">Unsere Vision für die Lizumer Hütte</h2>
+            <p class="section__lead">Sechs Säulen tragen unser Konzept – von der Küche bis zur Zusammenarbeit mit dem Alpenverein.</p>
+        </div>
+
+        <div class="concept-grid">
+            <div class="concept-card" data-animate>
+                <div class="concept-card__icon">🍽️</div>
+                <h3>Gastronomisches Konzept</h3>
+                <p>Moderne, gesunde Küche mit folgenden Prinzipien:</p>
+                <ul>
+                    <li>Regionalität: Produkte direkt vom Hof</li>
+                    <li>Saisonalität: Speisen passend zur Jahreszeit</li>
+                    <li>Nachhaltigkeit: Reduzierte Lebensmittelverschwendung</li>
+                    <li>Vielfalt: Vegetarische & vegane Optionen</li>
+                    <li>Transparenz: Offene Kommunikation über Herkunft</li>
+                </ul>
+            </div>
+
+            <div class="concept-card" data-animate>
+                <div class="concept-card__icon">🤝</div>
+                <h3>Service & Gästeerlebnis</h3>
+                <p>Die persönliche Note steht im Vordergrund:</p>
+                <ul>
+                    <li>Herzliche Gastfreundschaft</li>
+                    <li>Persönliche Beratung & Wandertipps</li>
+                    <li>Wanderecke mit Karten & GPS-Daten</li>
+                    <li>Themenwände mit Tourentipps</li>
+                    <li>Authentische Begegnungen</li>
+                </ul>
+            </div>
+
+            <div class="concept-card" data-animate>
+                <div class="concept-card__icon">🌱</div>
+                <h3>Nachhaltigkeit</h3>
+                <p>Aktiver Klimaschutz als gelebte Praxis:</p>
+                <ul>
+                    <li>Energieeffizienz & PV-Anlage nutzen</li>
+                    <li>Striktes Abfallmanagement</li>
+                    <li>Mehrweggeschirr wo möglich</li>
+                    <li>Resteverwertungskonzepte</li>
+                    <li>Zusammenarbeit mit Foodsharing</li>
+                </ul>
+            </div>
+
+            <div class="concept-card" data-animate>
+                <div class="concept-card__icon">👥</div>
+                <h3>Team & Organisation</h3>
+                <p>Motivierte Mitarbeitende als Erfolgsfaktor:</p>
+                <ul>
+                    <li>Fairness und Respekt</li>
+                    <li>Transparente Kommunikation</li>
+                    <li>Klare Dienstpläne & Rotation</li>
+                    <li>Fortbildungen & Hygiene-Schulungen</li>
+                    <li>Digitale Menükarten via QR-Code</li>
+                </ul>
+            </div>
+
+            <div class="concept-card" data-animate>
+                <div class="concept-card__icon">️</div>
+                <h3>Zusammenarbeit mit Alpenverein</h3>
+                <p>Partnerschaftliche Zusammenarbeit:</p>
+                <ul>
+                    <li>Wandervorträge & Workshops</li>
+                    <li>Familienfreundliche Events</li>
+                    <li>Umweltgütesiegel aktiv tragen</li>
+                    <li>Jährliche CO₂-Bilanzierung</li>
+                    <li>Tradition bewahren, Innovation leben</li>
+                </ul>
+            </div>
+
+            <div class="concept-card" data-animate>
+                <div class="concept-card__icon"></div>
+                <h3>Zielgruppen</h3>
+                <p>Für jeden Gast das passende Angebot:</p>
+                <ul>
+                    <li>Tagesgäste: Mittagsmenü & Snacks</li>
+                    <li>Übernachtungsgäste: Abendessen & Frühstück</li>
+                    <li>Familien: Kinderfreundliche Gerichte</li>
+                    <li>Kursteilnehmer: Individuelle Menüs</li>
+                    <li>Themenabende & Events</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item" data-animate>
+                <div class="stat-number">19+</div>
+                <div class="stat-label">Jahre Erfahrung</div>
+            </div>
+            <div class="stat-item" data-animate>
+                <div class="stat-number">3</div>
+                <div class="stat-label">Spezialisten</div>
+            </div>
+            <div class="stat-item" data-animate>
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Leidenschaft</div>
+            </div>
+            <div class="stat-item" data-animate>
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Engagement</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="kontakt">
+        <h2>Lassen Sie uns gemeinsam Großartiges schaffen</h2>
+        <p>Wir freuen uns darauf, die Lizumer Hütte zu einem unvergesslichen Ort zu machen – für Gäste, für das Team und für die Region.</p>
+        <div class="cta-buttons">
+            <a href="mailto:toni.vollmann@gmx.at?subject=Pächterbewerbung%20Lizumer%20Hütte" class="cta-button" data-animate>
+                 Jetzt Kontakt aufnehmen
+            </a>
+            <a href="Betriebskonzept Lizumer Hütte.pdf" class="cta-button cta-button--outline" data-animate download>
+                📄 Betriebskonzept herunterladen
+            </a>
+            <a href="2026_Lizumer-Huette.pdf" class="cta-button cta-button--outline" data-animate download>
+                📋 Vollständige Bewerbung
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="logo.png" alt="Logo" class="footer__logo">
+        <p>&copy; 2026 Toni Vollmann, Camila Carneyro, Jacqueline Vollmann</p>
+        <p>Bewerbung als Pächter der Lizumer Hütte</p>
+    </footer>
+
+    <!-- GSAP + ScrollTrigger via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script>
+        // ============================================
+        // INITIALISIERUNG
+        // ============================================
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ============================================
+        // PROGRESS INDICATOR (BBC-style)
+        // ============================================
+        const progressIndicator = document.getElementById('progressIndicator');
+        const progressBar = document.getElementById('progressBar');
+
+        ScrollTrigger.create({
+            start: 'top top',
+            end: 'bottom bottom',
+            onUpdate: (self) => {
+                const progress = self.progress * 100;
+                progressBar.style.width = progress + '%';
+                
+                if (self.progress > 0.05) {
+                    progressIndicator.classList.add('progress-indicator--active');
+                } else {
+                    progressIndicator.classList.remove('progress-indicator--active');
+                }
+            }
+        });
+
+        // ============================================
+        // NAVIGATION SCROLL-EFFEKT
+        // ============================================
+        const nav = document.getElementById('nav');
+        
+        ScrollTrigger.create({
+            start: 'top -100',
+            end: 99999,
+            onUpdate: (self) => {
+                if (self.direction === 1 && self.progress > 0) {
+                    nav.classList.add('nav--scrolled');
+                } else if (self.progress === 0) {
+                    nav.classList.remove('nav--scrolled');
+                }
+            }
+        });
+
+        // ============================================
+        // HERO PARALLAX
+        // ============================================
+        const heroBg = document.getElementById('heroBg');
+        
+        gsap.to(heroBg, {
+            yPercent: 30,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
+
+        // Hero Content Animationen
+        gsap.to('.hero__eyebrow', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.3,
+            ease: 'power3.out'
+        });
+
+        gsap.to('.hero__title', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.5,
+            ease: 'power3.out'
+        });
+
+        gsap.to('.hero__subtitle', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.7,
+            ease: 'power3.out'
+        });
+
+        gsap.to('.hero__team', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.9,
+            ease: 'power3.out'
+        });
+
+        // ============================================
+        // FADE SCROLL (BBC-style)
+        // ============================================
+        const fadeScrollSections = document.querySelectorAll('.fade-scroll');
+        
+        fadeScrollSections.forEach(section => {
+            const bgItems = section.querySelectorAll('.fade-scroll__bg-item');
+            const slides = section.querySelectorAll('.fade-scroll__slide');
+            const cards = section.querySelectorAll('.fade-scroll__card');
+            
+            // Background-Wechsel beim Scrollen
+            slides.forEach((slide, index) => {
+                ScrollTrigger.create({
+                    trigger: slide,
+                    start: 'top center',
+                    end: 'bottom center',
+                    onEnter: () => {
+                        bgItems.forEach(item => item.classList.remove('fade-scroll__bg-item--active'));
+                        if (bgItems[index]) {
+                            bgItems[index].classList.add('fade-scroll__bg-item--active');
+                        }
+                    },
+                    onEnterBack: () => {
+                        bgItems.forEach(item => item.classList.remove('fade-scroll__bg-item--active'));
+                        if (bgItems[index]) {
+                            bgItems[index].classList.add('fade-scroll__bg-item--active');
+                        }
+                    }
+                });
+            });
+
+            // Card Animationen
+            cards.forEach(card => {
+                ScrollTrigger.create({
+                    trigger: card,
+                    start: 'top 80%',
+                    onEnter: () => card.classList.add('fade-scroll__card--visible'),
+                    onLeaveBack: () => card.classList.remove('fade-scroll__card--visible')
+                });
+            });
+        });
+
+        // ============================================
+        // STICKY SCROLL (BBC-style Team Section)
+        // ============================================
+        const stickyScrollSections = document.querySelectorAll('.sticky-scroll');
+        
+        stickyScrollSections.forEach(section => {
+            const mediaItems = section.querySelectorAll('.sticky-scroll__media-item');
+            const items = section.querySelectorAll('.sticky-scroll__item');
+            
+            items.forEach((item, index) => {
+                // Item einblenden
+                ScrollTrigger.create({
+                    trigger: item,
+                    start: 'top 70%',
+                    onEnter: () => item.classList.add('sticky-scroll__item--visible'),
+                    onLeaveBack: () => item.classList.remove('sticky-scroll__item--visible')
+                });
+
+                // Media-Wechsel
+                ScrollTrigger.create({
+                    trigger: item,
+                    start: 'top center',
+                    end: 'bottom center',
+                    onEnter: () => {
+                        mediaItems.forEach(m => m.classList.remove('sticky-scroll__media-item--visible'));
+                        if (mediaItems[index]) {
+                            mediaItems[index].classList.add('sticky-scroll__media-item--visible');
+                        }
+                    },
+                    onEnterBack: () => {
+                        mediaItems.forEach(m => m.classList.remove('sticky-scroll__media-item--visible'));
+                        if (mediaItems[index]) {
+                            mediaItems[index].classList.add('sticky-scroll__media-item--visible');
+                        }
+                    }
+                });
+
+                // Skill-Tags Animation
+                const skills = item.querySelectorAll('.skill-tag');
+                skills.forEach((skill, skillIndex) => {
+                    ScrollTrigger.create({
+                        trigger: item,
+                        start: 'top 60%',
+                        onEnter: () => {
+                            setTimeout(() => {
+                                skill.classList.add('skill-tag--visible');
+                            }, skillIndex * 100);
+                        },
+                        onLeaveBack: () => skill.classList.remove('skill-tag--visible')
+                    });
+                });
+            });
+        });
+
+        // ============================================
+        // CONCEPT CARDS ANIMATION
+        // ============================================
+        const conceptCards = document.querySelectorAll('.concept-card');
+        
+        conceptCards.forEach((card, index) => {
+            ScrollTrigger.create({
+                trigger: card,
+                start: 'top 85%',
+                onEnter: () => {
+                    setTimeout(() => {
+                        card.classList.add('concept-card--visible');
+                    }, index * 100);
+                },
+                onLeaveBack: () => card.classList.remove('concept-card--visible')
+            });
+        });
+
+        // ============================================
+        // STATS ANIMATION
+        // ============================================
+        const statItems = document.querySelectorAll('.stat-item');
+        
+        statItems.forEach((stat, index) => {
+            ScrollTrigger.create({
+                trigger: stat,
+                start: 'top 80%',
+                onEnter: () => {
+                    setTimeout(() => {
+                        stat.classList.add('stat-item--visible');
+                    }, index * 150);
+                },
+                onLeaveBack: () => stat.classList.remove('stat-item--visible')
+            });
+        });
+
+        // ============================================
+        // CTA BUTTONS ANIMATION
+        // ============================================
+        const ctaButtons = document.querySelectorAll('.cta-button');
+        
+        ctaButtons.forEach((button, index) => {
+            ScrollTrigger.create({
+                trigger: button,
+                start: 'top 90%',
+                onEnter: () => {
+                    setTimeout(() => {
+                        button.classList.add('cta-button--visible');
+                    }, index * 200);
+                },
+                onLeaveBack: () => button.classList.remove('cta-button--visible')
+            });
+        });
+
+        // ============================================
+        // SMOOTH SCROLL FÜR NAV-LINKS
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ============================================
+        // MOBILE NAV BURGER
+        // ============================================
+        const burger = document.querySelector('.nav__burger');
+        const navLinks = document.querySelector('.nav__links');
+        
+        if (burger) {
+            burger.addEventListener('click', () => {
+                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = 'rgba(255,255,255,0.98)';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.padding = '2rem';
+                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+                
+                document.querySelectorAll('.nav__link').forEach(link => {
+                    link.style.color = 'var(--color-dark)';
+                    link.style.padding = '0.75rem 0';
+                });
+            });
+        }
+
+        // ============================================
+        // REFRESH SCROLLTRIGGER BEI RESIZE
+        // ============================================
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 250);
+        });
+
+        // Initiale Refresh
+        window.addEventListener('load', () => {
+            ScrollTrigger.refresh();
+        });
+    </script>
+</body>
+</html>
