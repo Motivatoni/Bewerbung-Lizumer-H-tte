@@ -1708,6 +1708,36 @@
                 onLeaveBack: () => button.classList.remove('cta-button--visible')
             });
         });
+        // Counter Animation für Stats-Sektion
+        document.querySelectorAll('.stat-number').forEach(stat => {
+            const text = stat.textContent;
+            const targetValue = parseFloat(text);
+            const suffix = text.replace(/[0-9.]/g, '');
+            
+            // ∞-Symbol überspringen
+            if (text === '∞') return;
+            
+            // Startwert auf 0 setzen
+            stat.textContent = '0' + suffix;
+            
+            // Animation beim Scrollen
+            ScrollTrigger.create({
+                trigger: stat,
+                start: 'top 80%',
+                onEnter: () => {
+                    gsap.to({ val: 0 }, {
+                        val: targetValue,
+                        duration: 2,
+                        ease: 'power2.out',
+                        onUpdate: function() {
+                            const currentVal = Math.round(this.targets()[0].val);
+                            stat.textContent = currentVal + suffix;
+                        }
+                    });
+                },
+                once: true // Animation nur einmal abspielen
+            });
+        });
 
         // ============================================
         // SMOOTH SCROLL FÜR NAV-LINKS
