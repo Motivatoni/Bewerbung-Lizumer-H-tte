@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pächterbewerbung Lizumer Hütte – Toni, Camila & Jacqueline</title>
+    <title>Pächterbewerbung Lizumer Hütte – Camila, Toni & Jacqueline</title>
     <meta name="description" content="Interaktive Bewerbung als Pächterteam für die Lizumer Hütte. Ein Team mit Leidenschaft für die Berge, nachhaltige Gastronomie und alpine Gastfreundschaft.">
     
     <style>
@@ -87,7 +87,7 @@
         }
 
         /* ============================================
-           NAVIGATION
+           NAVIGATION (Scroll-basierter Farbwechsel + Fade)
            ============================================ */
         .nav {
             position: fixed;
@@ -96,14 +96,19 @@
             width: 100%;
             padding: 1rem 2rem;
             z-index: 9999;
-            transition: var(--transition-smooth);
+            transition: background 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
             background: transparent;
+            
+            /* Weicher Übergang am unteren Rand */
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
         }
 
         .nav--scrolled {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow-sm);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
             padding: 0.75rem 2rem;
         }
 
@@ -127,14 +132,15 @@
         }
 
         .nav__link {
-            color: var(--color-white);
+            color: #ffffff; /* Standard: Weiß */
             text-decoration: none;
             font-weight: 500;
             font-size: 0.95rem;
             position: relative;
-            transition: var(--transition-fast);
+            transition: color 0.4s ease;
         }
 
+        /* Wenn gescrollt → Text wird dunkel */
         .nav--scrolled .nav__link {
             color: var(--color-dark);
         }
@@ -166,13 +172,56 @@
             display: block;
             width: 24px;
             height: 2px;
-            background: var(--color-white);
+            background: #ffffff; /* Standard: Weiß */
             margin: 5px 0;
-            transition: var(--transition-fast);
+            transition: background 0.4s ease;
         }
 
+        /* Burger-Menü wird dunkel beim Scrollen */
         .nav--scrolled .nav__burger span {
             background: var(--color-dark);
+        }
+
+        /* ============================================
+           MOBILE DROPDOWN (außerhalb der .nav)
+           ============================================ */
+        .mobile-dropdown {
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            padding: 1rem 2rem 1.5rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border-bottom: 2px solid var(--color-secondary);
+        }
+
+        .mobile-dropdown--open {
+            display: flex;
+        }
+
+        .mobile-dropdown__link {
+            color: var(--color-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            transition: color 0.3s ease, padding-left 0.3s ease;
+        }
+
+        .mobile-dropdown__link:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-dropdown__link:hover {
+            color: var(--color-primary);
+            padding-left: 0.5rem;
         }
 
         /* ============================================
@@ -537,19 +586,17 @@
         }
 
         /* ============================================
-           MOBILE TEAM FLOW (< 768px) - NEUES FULL-SCREEN DESIGN
+           MOBILE TEAM FLOW (< 768px) - FULL-SCREEN DESIGN
            ============================================ */
         @media (max-width: 767px) {
             .team-mobile {
                 display: block !important;
             }
 
-            /* Jede Person = eigener Container */
             .team-mobile__member {
                 width: 100%;
             }
 
-            /* 1. Foto-Sektion (Vollbild) */
             .team-mobile__photo-section {
                 position: relative;
                 height: 100vh;
@@ -639,7 +686,6 @@
                 to { opacity: 0.8; }
             }
 
-            /* 2. Text-Sektion (Vollbild) */
             .team-mobile__text-section {
                 height: 100vh;
                 background: var(--color-white);
@@ -702,10 +748,19 @@
             }
         }
 
-        /* Desktop: Mobile-Flow ausblenden */
         @media (min-width: 768px) {
             .team-mobile {
                 display: none !important;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .sticky-scroll__content {
+                display: none !important;
+            }
+            .sticky-scroll .section__header {
+                padding: 4rem 2rem 2rem;
+                margin-bottom: 0;
             }
         }
 
@@ -929,22 +984,6 @@
                 display: block;
             }
 
-            .sticky-scroll__content {
-                flex-direction: column;
-            }
-
-            .sticky-scroll__media {
-                position: relative;
-                top: 0;
-                height: 400px;
-                max-height: none;
-                width: 100%;
-            }
-
-            .sticky-scroll__items {
-                padding-top: 2rem;
-            }
-
             .fade-scroll__card {
                 padding: 2rem;
             }
@@ -998,27 +1037,12 @@
             html {
                 scroll-behavior: auto;
             }
-            }
-                /* ============================================
-           FIX: Desktop-Inhalt auf Mobile ausblenden
-           ============================================ */
-        @media (max-width: 767px) {
-            /* Blendet den doppelten Desktop-Inhalt auf dem Handy aus */
-            .sticky-scroll__content {
-                display: none !important;
-            }
-            
-            /* Passt den Abstand der Überschrift auf dem Handy an */
-            .sticky-scroll .section__header {
-                padding: 4rem 2rem 2rem;
-                margin-bottom: 0;
-            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Progress Indicator (BBC-style) -->
+    <!-- Progress Indicator -->
     <div class="progress-indicator" id="progressIndicator">
         <div class="progress-indicator__bar" id="progressBar"></div>
     </div>
@@ -1040,6 +1064,14 @@
             </button>
         </div>
     </nav>
+
+    <!-- Mobile Dropdown (außerhalb der .nav, damit es nicht abgeschnitten wird) -->
+    <div class="mobile-dropdown" id="mobileDropdown">
+        <a href="#team" class="mobile-dropdown__link">Team</a>
+        <a href="#konzept" class="mobile-dropdown__link">Konzept</a>
+        <a href="#nachhaltigkeit" class="mobile-dropdown__link">Nachhaltigkeit</a>
+        <a href="#kontakt" class="mobile-dropdown__link">Kontakt</a>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -1078,7 +1110,7 @@
             <div class="fade-scroll__slide">
                 <div class="fade-scroll__card" data-animate>
                     <h3>Warum wir?</h3>
-                    <p>Als Dreier-Team vereinen wir unterschiedliche Stärken – Toni (Gastronomie & Handwerk), Camila (Outdoor & Umweltbildung) und Jacqueline (Organisation & Gastronomie) – und bringen das nötige Wissen, Engagement und Herzblut mit.</p>
+                    <p>Als Dreier-Team vereinen wir unterschiedliche Stärken – Camila (Outdoor & Umweltbildung), Toni (Gastronomie & Handwerk) und Jacqueline (Organisation & Gastronomie) – und bringen das nötige Wissen, Engagement und Herzblut mit.</p>
                 </div>
             </div>
         </div>
@@ -1162,8 +1194,7 @@
                 </div>
             </div>
         </div>
-        
-        
+
         <!-- Jacqueline -->
         <div class="team-mobile__member" data-member="jacqueline">
             <div class="team-mobile__photo-section">
@@ -1199,9 +1230,8 @@
                 </div>
             </div>
         </div>
+
     </div>
-
-
 
     <!-- DESKTOP TEAM SECTION (Sticky-Scroll, ab 768px sichtbar) -->
     <section class="sticky-scroll section--full" id="team">
@@ -1264,7 +1294,6 @@
                             <span class="skill-tag">Handwerk</span>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -1306,6 +1335,19 @@
             </div>
 
             <div class="concept-card" data-animate>
+                <div class="concept-card__icon">👥</div>
+                <h3>Team & Organisation</h3>
+                <p>Motivierte Mitarbeitende als Erfolgsfaktor:</p>
+                <ul>
+                    <li>Fairness und Respekt</li>
+                    <li>Transparente Kommunikation</li>
+                    <li>Klare Dienstpläne & Rotation</li>
+                    <li>Fortbildungen & Hygiene-Schulungen</li>
+                    <li>Digitale Menükarten via QR-Code</li>
+                </ul>
+            </div>
+
+            <div class="concept-card" data-animate id="nachhaltigkeit" style="scroll-margin-top: 100px;">
                 <div class="concept-card__icon">🌱</div>
                 <h3>Nachhaltigkeit</h3>
                 <p>Aktiver Klimaschutz als gelebte Praxis:</p>
@@ -1319,20 +1361,7 @@
             </div>
 
             <div class="concept-card" data-animate>
-                <div class="concept-card__icon">👥</div>
-                <h3>Team & Organisation</h3>
-                <p>Motivierte Mitarbeitende als Erfolgsfaktor:</p>
-                <ul>
-                    <li>Fairness und Respekt</li>
-                    <li>Transparente Kommunikation</li>
-                    <li>Klare Dienstpläne & Rotation</li>
-                    <li>Fortbildungen & Hygiene-Schulungen</li>
-                    <li>Digitale Menükarten via QR-Code</li>
-                </ul>
-            </div>
-
-            <div class="concept-card" data-animate>
-                <div class="concept-card__icon">️</div>
+                <div class="concept-card__icon">🏔️</div>
                 <h3>Zusammenarbeit mit Alpenverein</h3>
                 <p>Partnerschaftliche Zusammenarbeit:</p>
                 <ul>
@@ -1393,7 +1422,7 @@
                 📄 Betriebskonzept herunterladen
             </a>
             <a href="2026_Lizumer-Huette.pdf" class="cta-button cta-button--outline" data-animate download>
-                 Vollständige Bewerbung
+                📋 Vollständige Bewerbung
             </a>
         </div>
     </section>
@@ -1401,7 +1430,7 @@
     <!-- Footer -->
     <footer class="footer">
         <img src="logo.png" alt="Logo" class="footer__logo">
-        <p>&copy; 2026 Toni Vollmann, Camila Carneyro, Jacqueline Vollmann</p>
+        <p>&copy; 2026 Camila Carneyro, Toni Carneyro-Vollmann, Jacqueline Vollmann</p>
         <p>Bewerbung als Pächter der Lizumer Hütte</p>
     </footer>
 
@@ -1414,6 +1443,19 @@
         // INITIALISIERUNG
         // ============================================
         gsap.registerPlugin(ScrollTrigger);
+
+        // ============================================
+        // NAVIGATION SCROLL-EFFEKT
+        // ============================================
+        const nav = document.getElementById('nav');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                nav.classList.add('nav--scrolled');
+            } else {
+                nav.classList.remove('nav--scrolled');
+            }
+        });
 
         // ============================================
         // PROGRESS INDICATOR (BBC-style)
@@ -1437,23 +1479,6 @@
         });
 
         // ============================================
-        // NAVIGATION SCROLL-EFFEKT
-        // ============================================
-        const nav = document.getElementById('nav');
-        
-        ScrollTrigger.create({
-            start: 'top -100',
-            end: 99999,
-            onUpdate: (self) => {
-                if (self.direction === 1 && self.progress > 0) {
-                    nav.classList.add('nav--scrolled');
-                } else if (self.progress === 0) {
-                    nav.classList.remove('nav--scrolled');
-                }
-            }
-        });
-
-        // ============================================
         // HERO PARALLAX
         // ============================================
         const heroBg = document.getElementById('heroBg');
@@ -1470,37 +1495,10 @@
         });
 
         // Hero Content Animationen
-        gsap.to('.hero__eyebrow', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            delay: 0.3,
-            ease: 'power3.out'
-        });
-
-        gsap.to('.hero__title', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            delay: 0.5,
-            ease: 'power3.out'
-        });
-
-        gsap.to('.hero__subtitle', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            delay: 0.7,
-            ease: 'power3.out'
-        });
-
-        gsap.to('.hero__team', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            delay: 0.9,
-            ease: 'power3.out'
-        });
+        gsap.to('.hero__eyebrow', { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: 'power3.out' });
+        gsap.to('.hero__title', { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: 'power3.out' });
+        gsap.to('.hero__subtitle', { opacity: 1, y: 0, duration: 1, delay: 0.7, ease: 'power3.out' });
+        gsap.to('.hero__team', { opacity: 1, y: 0, duration: 1, delay: 0.9, ease: 'power3.out' });
 
         // ============================================
         // FADE SCROLL (BBC-style)
@@ -1512,7 +1510,6 @@
             const slides = section.querySelectorAll('.fade-scroll__slide');
             const cards = section.querySelectorAll('.fade-scroll__card');
             
-            // Background-Wechsel beim Scrollen
             slides.forEach((slide, index) => {
                 ScrollTrigger.create({
                     trigger: slide,
@@ -1520,20 +1517,15 @@
                     end: 'bottom center',
                     onEnter: () => {
                         bgItems.forEach(item => item.classList.remove('fade-scroll__bg-item--active'));
-                        if (bgItems[index]) {
-                            bgItems[index].classList.add('fade-scroll__bg-item--active');
-                        }
+                        if (bgItems[index]) bgItems[index].classList.add('fade-scroll__bg-item--active');
                     },
                     onEnterBack: () => {
                         bgItems.forEach(item => item.classList.remove('fade-scroll__bg-item--active'));
-                        if (bgItems[index]) {
-                            bgItems[index].classList.add('fade-scroll__bg-item--active');
-                        }
+                        if (bgItems[index]) bgItems[index].classList.add('fade-scroll__bg-item--active');
                     }
                 });
             });
 
-            // Card Animationen
             cards.forEach(card => {
                 ScrollTrigger.create({
                     trigger: card,
@@ -1554,7 +1546,6 @@
             const items = section.querySelectorAll('.sticky-scroll__item');
             
             items.forEach((item, index) => {
-                // Item einblenden
                 ScrollTrigger.create({
                     trigger: item,
                     start: 'top 70%',
@@ -1562,35 +1553,27 @@
                     onLeaveBack: () => item.classList.remove('sticky-scroll__item--visible')
                 });
 
-                // Media-Wechsel
                 ScrollTrigger.create({
                     trigger: item,
                     start: 'top center',
                     end: 'bottom center',
                     onEnter: () => {
                         mediaItems.forEach(m => m.classList.remove('sticky-scroll__media-item--visible'));
-                        if (mediaItems[index]) {
-                            mediaItems[index].classList.add('sticky-scroll__media-item--visible');
-                        }
+                        if (mediaItems[index]) mediaItems[index].classList.add('sticky-scroll__media-item--visible');
                     },
                     onEnterBack: () => {
                         mediaItems.forEach(m => m.classList.remove('sticky-scroll__media-item--visible'));
-                        if (mediaItems[index]) {
-                            mediaItems[index].classList.add('sticky-scroll__media-item--visible');
-                        }
+                        if (mediaItems[index]) mediaItems[index].classList.add('sticky-scroll__media-item--visible');
                     }
                 });
 
-                // Skill-Tags Animation
                 const skills = item.querySelectorAll('.skill-tag');
                 skills.forEach((skill, skillIndex) => {
                     ScrollTrigger.create({
                         trigger: item,
                         start: 'top 60%',
                         onEnter: () => {
-                            setTimeout(() => {
-                                skill.classList.add('skill-tag--visible');
-                            }, skillIndex * 100);
+                            setTimeout(() => skill.classList.add('skill-tag--visible'), skillIndex * 100);
                         },
                         onLeaveBack: () => skill.classList.remove('skill-tag--visible')
                     });
@@ -1599,7 +1582,7 @@
         });
 
         // ============================================
-        // MOBILE TEAM FLOW ANIMATIONEN (NEU: Full-Screen Text)
+        // MOBILE TEAM FLOW ANIMATIONEN
         // ============================================
         document.querySelectorAll('.team-mobile__member').forEach(member => {
             const photo = member.querySelector('.team-mobile__photo');
@@ -1609,7 +1592,7 @@
             const textContent = member.querySelector('.team-mobile__text-content');
             const textSection = member.querySelector('.team-mobile__text-section');
 
-            // 1. Parallax-Effekt für das Foto (nur in der Foto-Sektion)
+            // 1. Parallax-Effekt für das Foto
             gsap.to(photo, {
                 yPercent: 20,
                 ease: 'none',
@@ -1621,35 +1604,22 @@
                 }
             });
 
-            // 2. Name + Rolle einblenden (wenn Foto-Sektion in der Mitte ist)
+            // 2. Name + Rolle einblenden
             gsap.fromTo(identity, 
                 { opacity: 0, y: 30 },
                 {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: photoSection,
-                        start: 'top 60%',
-                        end: 'top 30%',
-                        scrub: 1
-                    }
+                    opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+                    scrollTrigger: { trigger: photoSection, start: 'top 60%', end: 'top 30%', scrub: 1 }
                 }
             );
 
-            // 3. Scroll-Hint ausblenden beim Scrollen
+            // 3. Scroll-Hint ausblenden
             gsap.to(scrollHint, {
                 opacity: 0,
-                scrollTrigger: {
-                    trigger: photoSection,
-                    start: 'top 40%',
-                    end: 'top 20%',
-                    scrub: true
-                }
+                scrollTrigger: { trigger: photoSection, start: 'top 40%', end: 'top 20%', scrub: true }
             });
 
-            // 4. Text-Content einblenden (wenn Text-Sektion ins Bild kommt)
+            // 4. Text-Content einblenden
             ScrollTrigger.create({
                 trigger: textSection,
                 start: 'top 80%',
@@ -1662,25 +1632,21 @@
         // CONCEPT CARDS ANIMATION
         // ============================================
         const conceptCards = document.querySelectorAll('.concept-card');
-        
         conceptCards.forEach((card, index) => {
             ScrollTrigger.create({
                 trigger: card,
                 start: 'top 85%',
                 onEnter: () => {
-                    setTimeout(() => {
-                        card.classList.add('concept-card--visible');
-                    }, index * 100);
+                    setTimeout(() => card.classList.add('concept-card--visible'), index * 100);
                 },
                 onLeaveBack: () => card.classList.remove('concept-card--visible')
             });
         });
 
         // ============================================
-        // STATS ANIMATION
+        // STATS ANIMATION (Hochzählen)
         // ============================================
         const statItems = document.querySelectorAll('.stat-item');
-        
         statItems.forEach((stat, index) => {
             ScrollTrigger.create({
                 trigger: stat,
@@ -1688,6 +1654,29 @@
                 onEnter: () => {
                     setTimeout(() => {
                         stat.classList.add('stat-item--visible');
+                        
+                        const statNumber = stat.querySelector('.stat-number');
+                        const text = statNumber.textContent;
+                        
+                        // ∞-Symbol überspringen
+                        if (text === '∞') return;
+                        
+                        const targetValue = parseFloat(text);
+                        const suffix = text.replace(/[0-9.]/g, '');
+                        
+                        // Startwert auf 0 setzen
+                        statNumber.textContent = '0' + suffix;
+                        
+                        // Animation beim Scrollen
+                        gsap.to({ val: 0 }, {
+                            val: targetValue,
+                            duration: 2,
+                            ease: 'power2.out',
+                            onUpdate: function() {
+                                const currentVal = Math.round(this.targets()[0].val);
+                                statNumber.textContent = currentVal + suffix;
+                            }
+                        });
                     }, index * 150);
                 },
                 onLeaveBack: () => stat.classList.remove('stat-item--visible')
@@ -1698,47 +1687,14 @@
         // CTA BUTTONS ANIMATION
         // ============================================
         const ctaButtons = document.querySelectorAll('.cta-button');
-        
         ctaButtons.forEach((button, index) => {
             ScrollTrigger.create({
                 trigger: button,
                 start: 'top 90%',
                 onEnter: () => {
-                    setTimeout(() => {
-                        button.classList.add('cta-button--visible');
-                    }, index * 200);
+                    setTimeout(() => button.classList.add('cta-button--visible'), index * 200);
                 },
                 onLeaveBack: () => button.classList.remove('cta-button--visible')
-            });
-        });
-        // Counter Animation für Stats-Sektion
-        document.querySelectorAll('.stat-number').forEach(stat => {
-            const text = stat.textContent;
-            const targetValue = parseFloat(text);
-            const suffix = text.replace(/[0-9.]/g, '');
-            
-            // ∞-Symbol überspringen
-            if (text === '∞') return;
-            
-            // Startwert auf 0 setzen
-            stat.textContent = '0' + suffix;
-            
-            // Animation beim Scrollen
-            ScrollTrigger.create({
-                trigger: stat,
-                start: 'top 80%',
-                onEnter: () => {
-                    gsap.to({ val: 0 }, {
-                        val: targetValue,
-                        duration: 2,
-                        ease: 'power2.out',
-                        onUpdate: function() {
-                            const currentVal = Math.round(this.targets()[0].val);
-                            stat.textContent = currentVal + suffix;
-                        }
-                    });
-                },
-                once: true // Animation nur einmal abspielen
             });
         });
 
@@ -1750,35 +1706,26 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
         });
 
         // ============================================
-        // MOBILE NAV BURGER
+        // MOBILE NAV BURGER (Dropdown außerhalb der .nav)
         // ============================================
         const burger = document.querySelector('.nav__burger');
-        const navLinks = document.querySelector('.nav__links');
+        const mobileDropdown = document.getElementById('mobileDropdown');
         
-        if (burger) {
+        if (burger && mobileDropdown) {
             burger.addEventListener('click', () => {
-                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '100%';
-                navLinks.style.left = '0';
-                navLinks.style.right = '0';
-                navLinks.style.background = 'rgba(255,255,255,0.98)';
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.padding = '2rem';
-                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
-                
-                document.querySelectorAll('.nav__link').forEach(link => {
-                    link.style.color = 'var(--color-dark)';
-                    link.style.padding = '0.75rem 0';
+                mobileDropdown.classList.toggle('mobile-dropdown--open');
+            });
+
+            // Menü schließen, wenn ein Link geklickt wird
+            mobileDropdown.querySelectorAll('.mobile-dropdown__link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileDropdown.classList.remove('mobile-dropdown--open');
                 });
             });
         }
@@ -1789,15 +1736,10 @@
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                ScrollTrigger.refresh();
-            }, 250);
+            resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
         });
 
-        // Initiale Refresh
-        window.addEventListener('load', () => {
-            ScrollTrigger.refresh();
-        });
+        window.addEventListener('load', () => ScrollTrigger.refresh());
     </script>
 </body>
 </html>
